@@ -125,7 +125,7 @@ export class Search {
             };
 
             // Delay key repeat events, and handle up/down arrow movements if on repeat.
-            if (event.get_flags() != Clutter.EventFlags.NONE) {
+            if (event.get_flags() & Clutter.EventFlags.REPEATED) {
                 const now = global.get_current_time();
 
                 if (now - this.last_trigger < 100) {
