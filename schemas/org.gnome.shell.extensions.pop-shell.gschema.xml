@@ -28,6 +28,11 @@
             <summary>Gap surrounding tiled windows, in pixels</summary>
         </key>
 
+        <key type="b" name="show-indicator">
+            <default>true</default>
+            <summary>Show the Pop Shell menu in the top panel</summary>
+        </key>
+
         <key type="b" name="show-title">
             <default>true</default>
             <summary>Show title bars on windows with server-side decorations</summary>

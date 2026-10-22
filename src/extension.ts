@@ -1917,6 +1917,9 @@ export class Ext extends Ecs.System<ExtEvent> {
                 case 'gap-outer':
                     this.on_gap_outer();
                     break;
+                case 'show-indicator':
+                    if (indicator) indicator.button.visible = this.settings.show_indicator();
+                    break;
                 case 'show-title':
                     this.on_show_window_titles();
                     break;
@@ -1945,7 +1948,7 @@ export class Ext extends Ecs.System<ExtEvent> {
 
         this.connect(sessionMode, 'updated', () => {
             if (indicator) {
-                indicator.button.visible = !sessionMode.isLocked;
+                indicator.button.visible = !sessionMode.isLocked && this.settings.show_indicator();
             }
 
             if (sessionMode.isLocked) {
@@ -2712,6 +2715,7 @@ export default class PopShellExtension extends Extension {
         if (!indicator) {
             indicator = new PanelSettings.Indicator(ext);
             panel.addToStatusArea('pop-shell', indicator.button);
+            indicator.button.visible = ext.settings.show_indicator();
         }
 
         ext.keybindings.enable(ext.keybindings.global).enable(ext.keybindings.window_focus);
