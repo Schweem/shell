@@ -19,6 +19,10 @@ import { Overview } from 'resource:///org/gnome/shell/ui/overview.js';
 
 let overview_toggle: any = null;
 
+// GNOME 48 replaced St.BoxLayout's `vertical` with `orientation`; GNOME 51 removed `vertical`
+const VERTICAL: any =
+    'orientation' in St.BoxLayout.prototype ? { orientation: Clutter.Orientation.VERTICAL } : { vertical: true };
+
 export class Search {
     dialog: Shell.ModalDialog = new ModalDialog({
         styleClass: 'pop-shell-search modal-dialog',
@@ -121,7 +125,7 @@ export class Search {
             };
 
             // Delay key repeat events, and handle up/down arrow movements if on repeat.
-            if (event.get_flags() != Clutter.EventFlags.NONE) {
+            if (event.get_flags() & Clutter.EventFlags.REPEATED) {
                 const now = global.get_current_time();
 
                 if (now - this.last_trigger < 100) {
@@ -207,7 +211,7 @@ export class Search {
 
         this.list = new St.BoxLayout({
             styleClass: 'pop-shell-search-list',
-            vertical: true,
+            ...VERTICAL,
         });
 
         const scroller = new St.ScrollView();
@@ -435,7 +439,7 @@ export class SearchOption {
 
         const info_box = new St.BoxLayout({
             y_align: Clutter.ActorAlign.CENTER,
-            vertical: true,
+            ...VERTICAL,
             x_expand: true,
         });
         info_box.add_child(label);

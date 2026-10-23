@@ -21,6 +21,7 @@ interface AppWidgets {
     mouse_cursor_focus_position: any;
     log_level: any;
     max_window_width: any;
+    show_indicator: any;
 }
 
 export default class PopShellPreferences extends ExtensionPreferences {
@@ -123,6 +124,12 @@ function settings_dialog_new(): Gtk.Container {
         }
     });
 
+    app.show_indicator.set_active(ext.show_indicator());
+    app.show_indicator.connect('state-set', (_widget: any, state: boolean) => {
+        ext.set_show_indicator(state);
+        Settings.sync();
+    });
+
     return grid;
 }
 
@@ -177,6 +184,11 @@ function settings_dialog_view(): [AppWidgets, Gtk.Container] {
         xalign: 0.0,
     });
 
+    const show_indicator_label = new Gtk.Label({
+        label: 'Show Panel Icon',
+        xalign: 0.0,
+    });
+
     const [inner_gap, outer_gap] = gaps_section(grid, 9);
 
     const settings = {
@@ -192,6 +204,7 @@ function settings_dialog_view(): [AppWidgets, Gtk.Container] {
         mouse_cursor_focus_position: build_combo(grid, 7, focus.FocusPosition, 'Mouse Cursor Focus Position'),
         log_level: build_combo(grid, 8, log.LOG_LEVELS, 'Log Level'),
         max_window_width: number_entry(),
+        show_indicator: new Gtk.Switch({ halign: Gtk.Align.END }),
     };
 
     grid.attach(win_label, 0, 0, 1, 1);
@@ -217,6 +230,9 @@ function settings_dialog_view(): [AppWidgets, Gtk.Container] {
 
     grid.attach(max_window_width_label, 0, 12, 1, 1);
     grid.attach(settings.max_window_width, 1, 12, 1, 1);
+
+    grid.attach(show_indicator_label, 0, 13, 1, 1);
+    grid.attach(settings.show_indicator, 1, 13, 1, 1);
 
     return [settings, grid];
 }
